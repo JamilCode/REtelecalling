@@ -1,11 +1,12 @@
-const callConnection     = document.getElementById("callConnection");
-const connectedResponse  = document.getElementById("connectedResponse");
-const reasonNotConnected = document.getElementById("reasonNotConnected");
-const notInterested      = document.getElementById("notInterested");
-const nextCall           = document.getElementById("nextCall");
-const nextDate           = document.getElementById("nextDate");
-const remarks            = document.getElementById("remarks");
-const requirement        = document.getElementById("requirement");
+const callConnection		= document.getElementById("callConnection");
+const connectedResponse		= document.getElementById("connectedResponse");
+const reasonNotConnected	= document.getElementById("reasonNotConnected");
+const notInterested			= document.getElementById("notInterested");
+const nextCall				= document.getElementById("nextCall");
+const nextDate				= document.getElementById("nextDate");
+const remarks				= document.getElementById("remarks");
+const requirement			= document.getElementById("requirement");
+const loadingImg			= document.getElementById("loading");
 
 // helper to show/hide elements cleanly
 function show(el) { el.style.display = "block"; }
@@ -83,6 +84,9 @@ document.addEventListener("DOMContentLoaded", function() {
 	}
 	form.addEventListener("submit", (e) => {
 		e.preventDefault();
+		form.style.display = "none";
+		loading.style.display = "block";
+		
 		// after submit
 		fetch(scriptURL, { method: "POST", body: new FormData(form) })
 		.then((response) => {
