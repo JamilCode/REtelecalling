@@ -1,84 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telecalling Entry</title>
-	<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Telecalling CRM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-	<img id="loading" src="loading.gif"/>
-	<form name="Call Response"  autocomplete="off">
-        <input type="tel" id="phone" name="phone" placeholder="Phone Number" pattern="[0-9]{10}" required><br>
-		
-		<select id="callConnection" name="callConnection" required>
-			<option value="" disabled selected>Call Result</option>
-			<option value="connected">Call Connected</option>
-			<option value="not connected">Call is Not Connected</option>
-		</select><br>
-        
-		<select id="reasonNotConnected" name="reasonNotConnected" style="display: none">
-			<option value="" disabled selected>Reason of not connection</option>
-			<option value="switch off">Switch Off</option>
-			<option value="out of service">Out of Service</option>
-			<option value="invalid">Invalid Number</option>
-			<option value="no incoming">No Incoming</option>
-			<option value="no network">No Network</option>
-			<option value="transferred to voice mail">Transferred to Voice Mail</option>
-			<option value="ring and busy">Ring and Busy</option>
-			<option value="no response">No Response</option>
-			<option value="other">Other</option>
-		</select><br>
-		
-		<select id="connectedResponse" name="connectedResponse"  style="display: none">
-			<option value="" disabled selected>Customer Response</option>
-			<option value="interested">Customer is Interested</option>
-			<option value="not interested">Customer is Not Interested</option>
-			<option value="busy">Customer is Busy</option>
-			<option value="details shared">Details Shared</option>
-		</select><br>
-		
-		<select id="nextCall" name="nextCall"  style="display: none">
-			<option value="" disabled selected>Next Follow Up</option>
-			<option value="appointment">Appointment Fixed: </option>
-			<option value="followUp">Next Call: </option>
-		</select><input type="date" id="nextDate" name="nextDate"  style="display: none"><br>
-		
-		<select id="notInterested" name="notInterested"  style="display: none">
-			<option value="" disabled selected>Reason of not Interested</option>
-			<option value="already purchased somewhere">Already Purchased Somewhere</option>
-			<option value="requirement not matched">Requirement Not Matched</option>
-			<option value="low budget">Low Budget</option>
-			<option value="other">Other</option>
-		</select><br>
-		
-		<fieldset id="requirement" style="display: none">
-			<legend>Customer Requirements</legend>
-			<input type="text" name="location" placeholder="Preferred Location">
-			<input type="text" name="budget" placeholder="Budget In Lakh""><br>
-			<select id="propertyType" name="propertyType">
-				<option value="" disabled selected>Property Type</option>
-				<option value="1bhk">1 BHK</option>
-				<option value="2bhk">2 BHK</option>
-				<option value="3bhk">3 BHK</option>
-				<option value="4bhk">4 BHK</option>
-				<option value="5bhk">5 BHK</option>
-				<option value="duplex">Duplex</option>
-				<option value="villa">Villa</option>
-				<option value="penthouse">Penthouse</option>
-				<option value="land">Land</option>
-				<option value="other">Other</option>
-			</select><br>
-			<select id="propertyAge" name="propertyAge">
-				<option value="" disabled selected>Property Age</option>
-				<option value="rtm">Ready To Move</option>
-				<option value="uConstruct">Under Construction</option>
-				<option value="resale">Resale</option>
-			</select><br>
-		</fieldset>
-		<textarea id="remarks" name="remarks" rows="10" cols="30" placeholder="Remarks"  style="display: none"></textarea><br>
-		<input type="submit" value="Submit">
-    </form>
-	<script src="script.js"></script>
+
+  <nav class="nav">
+    <button class="nav-btn active" id="nav-response" onclick="navForm(this)">
+      <span class="nav-icon">📞</span>
+      <span class="nav-label">Call Response</span>
+    </button>
+    <button class="nav-btn" id="nav-data" onclick="navData(this)">
+      <span class="nav-icon">📋</span>
+      <span class="nav-label">Today's Leads</span>
+    </button>
+    <div class="nav-slider"></div>
+  </nav>
+
+  <!-- LEADS VIEW -->
+  <section id="newLeads">
+    <h2 class="section-title">Today's Leads</h2>
+    <div id="slabs-grid" class="slab-container">
+      <div class="status-msg">Loading profiles…</div>
+    </div>
+  </section>
+
+  <!-- LOADING -->
+  <div id="loading" class="loading-overlay">
+    <div class="spinner"></div>
+    <p>Submitting…</p>
+  </div>
+
+  <!-- CALL FORM -->
+  <form name="Call Response" autocomplete="off" id="callForm">
+
+    <div class="field">
+      <label for="phone">Phone Number</label>
+      <input type="tel" id="phone" name="phone" placeholder="10-digit number" pattern="[0-9]{10}" required>
+    </div>
+
+    <div class="field">
+      <label for="callConnection">Call Result</label>
+      <select id="callConnection" name="callConnection" required>
+        <option value="" disabled selected>Select result…</option>
+        <option value="connected">Call Connected</option>
+        <option value="not connected">Not Connected</option>
+      </select>
+    </div>
+
+    <div class="field" id="wrap-reasonNotConnected" style="display:none">
+      <label for="reasonNotConnected">Reason Not Connected</label>
+      <select id="reasonNotConnected" name="reasonNotConnected">
+        <option value="" disabled selected>Select reason…</option>
+        <option value="switch off">Switch Off</option>
+        <option value="out of service">Out of Service</option>
+        <option value="invalid">Invalid Number</option>
+        <option value="no incoming">No Incoming</option>
+        <option value="no network">No Network</option>
+        <option value="transferred to voice mail">Voicemail</option>
+        <option value="ring and busy">Ring &amp; Busy</option>
+        <option value="no response">No Response</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+
+    <div class="field" id="wrap-connectedResponse" style="display:none">
+      <label for="connectedResponse">Customer Response</label>
+      <select id="connectedResponse" name="connectedResponse">
+        <option value="" disabled selected>Select response…</option>
+        <option value="interested">Interested</option>
+        <option value="not interested">Not Interested</option>
+        <option value="busy">Busy</option>
+        <option value="details shared">Details Shared</option>
+      </select>
+    </div>
+
+    <div class="row-inline" id="wrap-nextCall" style="display:none">
+      <div class="field" style="flex:1">
+        <label for="nextCall">Follow-up</label>
+        <select id="nextCall" name="nextCall">
+          <option value="" disabled selected>Type…</option>
+          <option value="appointment">Appointment</option>
+          <option value="followUp">Next Call</option>
+        </select>
+      </div>
+      <div class="field" style="flex:1">
+        <label for="nextDate">Date</label>
+        <input type="date" id="nextDate" name="nextDate">
+      </div>
+    </div>
+
+    <div class="field" id="wrap-notInterested" style="display:none">
+      <label for="notInterested">Reason Not Interested</label>
+      <select id="notInterested" name="notInterested">
+        <option value="" disabled selected>Select reason…</option>
+        <option value="already purchased somewhere">Already Purchased</option>
+        <option value="requirement not matched">Requirement Not Matched</option>
+        <option value="low budget">Low Budget</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+
+    <fieldset id="requirement" style="display:none">
+      <legend>Customer Requirements</legend>
+      <div class="field">
+        <label>Preferred Location</label>
+        <input type="text" name="location" placeholder="e.g. Andheri West">
+      </div>
+      <div class="row">
+        <div class="field">
+          <label>Budget (₹ Lakh)</label>
+          <input type="text" name="budget" placeholder="e.g. 85">
+        </div>
+        <div class="field">
+          <label for="propertyType">Property Type</label>
+          <select id="propertyType" name="propertyType">
+            <option value="" disabled selected>Select…</option>
+            <option value="1bhk">1 BHK</option>
+            <option value="2bhk">2 BHK</option>
+            <option value="3bhk">3 BHK</option>
+            <option value="4bhk">4 BHK</option>
+            <option value="5bhk">5 BHK</option>
+            <option value="duplex">Duplex</option>
+            <option value="villa">Villa</option>
+            <option value="penthouse">Penthouse</option>
+            <option value="land">Land</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label for="propertyAge">Property Status</label>
+        <select id="propertyAge" name="propertyAge">
+          <option value="" disabled selected>Select…</option>
+          <option value="rtm">Ready To Move</option>
+          <option value="uConstruct">Under Construction</option>
+          <option value="resale">Resale</option>
+        </select>
+      </div>
+    </fieldset>
+
+    <div class="field" id="wrap-remarks" style="display:none">
+      <label for="remarks">Remarks</label>
+      <textarea id="remarks" name="remarks" rows="4" placeholder="Add notes…"></textarea>
+    </div>
+
+    <input type="submit" value="Submit Response">
+  </form>
+
+  <script src="script.js"></script>
 </body>
 </html>
